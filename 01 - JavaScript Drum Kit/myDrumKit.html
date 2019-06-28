@@ -1,50 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Bayne's Drum Kit</title>
+  <meta charset="utf-8">
+  <title>JBs Drumkit</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
+<body>
 
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
       <span class="sound">clap</span>
     </div>
+
     <div data-key="83" class="key">
       <kbd>S</kbd>
       <span class="sound">hihat</span>
     </div>
+
     <div data-key="68" class="key">
       <kbd>D</kbd>
       <span class="sound">kick</span>
     </div>
+
     <div data-key="70" class="key">
       <kbd>F</kbd>
       <span class="sound">openhat</span>
     </div>
+
     <div data-key="71" class="key">
       <kbd>G</kbd>
       <span class="sound">boom</span>
     </div>
+
     <div data-key="72" class="key">
       <kbd>H</kbd>
       <span class="sound">ride</span>
     </div>
+
     <div data-key="74" class="key">
       <kbd>J</kbd>
       <span class="sound">snare</span>
     </div>
+
     <div data-key="75" class="key">
       <kbd>K</kbd>
       <span class="sound">tom</span>
     </div>
+
     <div data-key="76" class="key">
       <kbd>L</kbd>
       <span class="sound">tink</span>
     </div>
+
   </div>
 
   <audio data-key="65" src="sounds/clap.wav"></audio>
@@ -57,14 +67,33 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
 
-window.addEventListener('keydown', function(event){
-  console.log(event)
-} )
+    function playSound(event) {
+      // debugger
+      // console.log(event.keyCode);
+      const audio = document.querySelector(`audio[data-key="${event.keyCode}"]`);
+      const key = document.querySelector(`.key[data-key="${event.keyCode}"]`);
+      // console.log(audio, "audio");
+      // console.log(key, "key");
+      if (!audio) return; //will stop func from running if no audio is assigned to a key
+      audio.currentTime = 0; // will rewind sound to start, allowing you to play sound in rapid succession
+      audio.play();
+      key.classList.add('playing');
+    }
 
-</script>
+    function removeTransition(event) {
+      // console.log(event);
+      if (event.propertyName !== 'transform') return //skip it if it's not a transform
+      this.classList.remove('playing')
+    }
 
+    const keys = document.querySelectorAll('.key')
+    // console.log(keys);
+    keys.forEach(key => key.addEventListener('transitionend', removeTransition))
+    window.addEventListener('keydown', playSound);
+  </script>
 
 </body>
+
 </html>
